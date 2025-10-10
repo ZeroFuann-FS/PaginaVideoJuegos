@@ -1,6 +1,5 @@
 # Tech & Games - Prototipo de Sitio de Comercio Electrónico
- https://zerofuann-fs.github.io/PaginaIA2/Inicio
-
+https://zerofuann-fs.github.io/
 Este es un prototipo de sitio web de comercio electrónico moderno, minimalista y responsive para vender productos electrónicos y videojuegos. El proyecto está construido puramente con HTML, CSS y JavaScript, sin necesidad de un backend o dependencias complejas.
 
 ## Características Principales
