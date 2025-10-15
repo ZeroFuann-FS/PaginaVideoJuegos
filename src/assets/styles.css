@@ -1,7 +1,10 @@
 /* --- Variables Globales (Tema Oscuro por defecto) --- */
 :root {
-    --primary-color: #8a3ffc; /* Morado */
-    --secondary-color: #a8a8a8;
+    --primary-color: #473B22; /* Marrón oscuro */
+    --secondary-color: #D0C1A2; /* Beige claro */
+    --tertiary-color: #C7A45F; /* Marrón dorado */
+    --complement-dark: #474238; /* Gris oscuro */
+    --complement-medium: #947A47; /* Marrón medio */
     --background-color: #161616;
     --surface-color: #262626;
     --text-color: #f4f4f4;
@@ -11,8 +14,11 @@
 
 /* --- Variables para el Tema Claro --- */
 body.light-mode {
-    --primary-color: #007bff;
-    --secondary-color: #6c757d;
+    --primary-color: #947A47; /* Marrón medio para light */
+    --secondary-color: #C7A45F; /* Marrón dorado para light */
+    --tertiary-color: #D0C1A2; /* Beige claro para light */
+    --complement-dark: #473B22; /* Marrón oscuro para light */
+    --complement-medium: #474238; /* Gris oscuro para light */
     --background-color: #ffffff;
     --surface-color: #f8f9fa;
     --text-color: #212529;
@@ -130,12 +136,8 @@ a {
 }
 
 .cta-button:hover {
-    background-color: #6a2ac2; /* Morado más oscuro */
+    background-color: var(--tertiary-color);
     transform: translateY(-2px);
-}
-
-body.light-mode .cta-button:hover {
-    background-color: #0056b3;
 }
 
 /* --- Hero Section --- */

@@ -4,19 +4,28 @@
       <div class="hero-content">
         <h1>Tech & Games</h1>
         <p>Tu tienda de tecnología y videojuegos</p>
+        <router-link to="/shop" class="cta-button">Explorar Tienda</router-link>
+      </div>
+      <div class="hero-products">
+        <div class="animated-image" v-for="(product, index) in featuredProducts.slice(0, 3)" :key="product.id">
+          <img :src="product.image" :alt="product.name" class="showcase-image" :style="{ animationDelay: `${(index + 1) * 0.5}s` }">
+        </div>
+      </div>
+    </div>
+    <div class="categories-section">
+      <h2>Categorías</h2>
+      <div class="categories-grid">
+        <router-link v-for="category in categories" :key="category.name" :to="`/shop?category=${category.name}`" class="category-card">
+          <h3>{{ category.name }}</h3>
+          <p>{{ category.subcategories.length }} subcategorías</p>
+        </router-link>
       </div>
     </div>
     <div class="product-grid">
       <h2>Productos Destacados</h2>
       <div id="product-container">
-        <div v-for="product in products" :key="product.id" class="product-card">
+        <div v-for="product in featuredProducts" :key="product.id" class="product-card image-only">
           <img :src="product.image" :alt="product.name">
-          <div class="product-card-content">
-            <h3>{{ product.name }}</h3>
-            <p>{{ product.description }}</p>
-            <div class="product-price">${{ product.price.toFixed(2) }}</div>
-            <button class="cta-button add-to-cart-btn" @click="addToCart(product)">Agregar al carrito</button>
-          </div>
         </div>
       </div>
     </div>
@@ -24,74 +33,24 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { cart } from '../store.js';
+import { computed } from 'vue';
+import { cart, products } from '../store.js';
 
-const products = ref([
-  {
-    id: 1,
-    name: 'PlayStation 5',
-    description: 'Consola de última generación con SSD de ultra alta velocidad.',
-    price: 499.99,
-    image: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?q=80&w=2070&auto=format&fit=crop'
-  },
-  {
-    id: 2,
-    name: 'Xbox Series X',
-    description: 'La Xbox más rápida y potente de la historia.',
-    price: 499.99,
-    image: 'https://images.unsplash.com/photo-1621259182952-08a122ff6c2c?q=80&w=1974&auto=format&fit=crop'
-  },
-  {
-    id: 3,
-    name: 'Nintendo Switch OLED',
-    description: 'Juega en casa o en cualquier lugar con una pantalla vibrante.',
-    price: 349.99,
-    image: 'https://images.unsplash.com/photo-1654922207993-2952fec328ae?q=80&w=2070&auto=format&fit=crop'
-  },
-  {
-    id: 4,
-    name: 'Tarjeta Gráfica RTX 4080',
-    description: 'Rendimiento extremo para gaming y creación de contenido.',
-    price: 1199.99,
-    image: 'https://images.unsplash.com/photo-1682211390292-d68b83903532?q=80&w=2071&auto=format&fit=crop'
-  },
-  {
-    id: 5,
-    name: 'Monitor Gamer 4K 144Hz',
-    description: 'Visuales impresionantes con una fluidez increíble.',
-    price: 799.99,
-    image: 'https://images.unsplash.com/photo-1627824439323-a9b473e76348?q=80&w=1932&auto=format&fit=crop'
-  },
-  {
-    id: 6,
-    name: 'Teclado Mecánico RGB',
-    description: 'Respuesta táctil y personalización de colores.',
-    price: 129.99,
-    image: 'https://images.unsplash.com/photo-1614624532983-7859163553a6?q=80&w=1974&auto=format&fit=crop'
-  },
-  {
-    id: 7,
-    name: 'The Legend of Zelda: Tears of the Kingdom',
-    description: 'La secuela épica de Breath of the Wild.',
-    price: 69.99,
-    image: 'https://images.unsplash.com/photo-1694122341224-00e4fe1d0a39?q=80&w=2070&auto=format&fit=crop'
-  },
-  {
-    id: 8,
-    name: 'Elden Ring',
-    description: 'Un vasto mundo de fantasía te espera.',
-    price: 59.99,
-    image: 'https://images.unsplash.com/photo-1678043639454-85704428453f?q=80&w=2070&auto=format&fit=crop'
-  },
-  {
-    id: 9,
-    name: 'Cyberpunk 2077',
-    description: 'Una historia de acción y aventura en Night City.',
-    price: 49.99,
-    image: 'https://images.unsplash.com/photo-1690272497980-1abbff59334a?q=80&w=2070&auto=format&fit=crop'
-  }
-]);
+const categories = computed(() => {
+  const cats = {};
+  products.forEach(product => {
+    if (!cats[product.category]) {
+      cats[product.category] = { name: product.category, subcategories: new Set() };
+    }
+    cats[product.category].subcategories.add(product.subcategory);
+  });
+  return Object.values(cats).map(cat => ({
+    name: cat.name,
+    subcategories: Array.from(cat.subcategories)
+  }));
+});
+
+const featuredProducts = computed(() => products.slice(0, 6)); // Show first 6 as featured
 
 function addToCart(product) {
   cart.addItem(product);
@@ -99,5 +58,186 @@ function addToCart(product) {
 </script>
 
 <style scoped>
-/* Scoped styles for Home.vue */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 4rem 2rem;
+  text-align: center;
+  animation: heroFadeIn 2s ease-in-out;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  animation: slideUp 1s ease-out 0.5s both;
+}
+
+.hero-products {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  opacity: 0.9;
+}
+
+.animated-image {
+  animation: slideInScale 2s ease-out forwards;
+  opacity: 0;
+  transform: scale(0.8) translateY(50px);
+}
+
+.animated-image:nth-child(1) {
+  animation-delay: 0.5s;
+}
+
+.animated-image:nth-child(2) {
+  animation-delay: 1s;
+}
+
+.animated-image:nth-child(3) {
+  animation-delay: 1.5s;
+}
+
+.showcase-image {
+  width: 250px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.showcase-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.6);
+}
+
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInScale {
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.categories-section {
+  margin: 3rem 0;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.category-card {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.category-card h3 {
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+}
+
+.product-stock {
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .hero-products {
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .animated-image {
+    animation: slideInScale 2s ease-out forwards;
+    opacity: 0;
+    transform: scale(0.8) translateY(50px);
+  }
+
+  .showcase-image {
+    width: 150px;
+    height: 100px;
+  }
+
+  .hero {
+    padding: 2rem 1rem;
+  }
+}
+
+.product-card {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.product-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.product-card.image-only {
+  padding: 0;
+  aspect-ratio: 4/3;
+}
+
+.product-card.image-only img {
+  height: 100%;
+  width: 100%;
+}
 </style>

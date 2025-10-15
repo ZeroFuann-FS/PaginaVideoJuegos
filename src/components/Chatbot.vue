@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div id="chat-bubble" class="chat-bubble" @click="toggleChat">
-      <i class="far fa-comment-dots"></i>
+    <div id="chat-bubble" class="chat-bubble" @click="toggleChat" title="Ayuda y Soporte">
+      <i class="fas fa-comments"></i>
     </div>
     <div id="chat-window" class="chat-window" :class="{ open: isChatOpen }">
       <div class="chat-header">
