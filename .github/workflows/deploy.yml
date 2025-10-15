@@ -5,7 +5,23 @@ on:
   push:
     branches: ["main"] # Se activa al hacer push a la rama principal
   workflow_dispatch:
+# .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
 
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+# 💡 AGREGAR ESTA SECCIÓN DE PERMISOS
+permissions:
+  contents: read
+  pages: write
+  id-token: write # ¡ESTO ES LO QUE ESTÁ FALTANDO!
+
+jobs:
+  build-and-deploy:
+# ... el resto de tu workflow permanece igual ...
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
