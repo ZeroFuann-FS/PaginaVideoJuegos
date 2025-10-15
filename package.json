@@ -2,7 +2,7 @@
   "name": "pagina-ia-vue",
   "version": "0.0.0",
   "private": true,
-  "homepage": "https://zerofuann-fs.github.io/PaginaIA2/PaginaVideoJuegos/",
+  "homepage": "https://zerofuann-fs.github.io/PaginaVideoJuegos/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
